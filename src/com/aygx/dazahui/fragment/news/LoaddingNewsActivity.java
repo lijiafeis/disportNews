@@ -23,6 +23,7 @@ import com.aygx.dazahui.network.NewsConnect;
 import com.aygx.dazahui.utils.DBUtils;
 import com.aygx.dazahui.utils.Utils;
 import com.google.gson.Gson;
+import com.lidroid.xutils.view.annotation.event.OnKey;
 
 public class LoaddingNewsActivity extends Activity implements
 		OnItemClickListener {
@@ -54,7 +55,8 @@ public class LoaddingNewsActivity extends Activity implements
 	}
 
 	private void getIntentString() {
-		title = getIntent().getStringExtra(OneActivity.NEWS_TITILE);
+		intent = getIntent();
+		title = intent.getStringExtra(OneActivity.NEWS_TITILE);
 		Utils.showToast(this, title);
 	}
 
@@ -106,6 +108,7 @@ public class LoaddingNewsActivity extends Activity implements
 	}
 
 	private ContentValues cv;
+	private Intent intent;
 
 	private void setDataToDb(int arg2) {
 		Result result = newsList.get(arg2);
@@ -132,5 +135,12 @@ public class LoaddingNewsActivity extends Activity implements
 			DBUtils.insertAllForReDian(this,cv);
 		}
 	}
+	
+	@Override
+	public void onBackPressed() {
+		setResult(1, intent);
+		finish();
+	}
+	
 
 }

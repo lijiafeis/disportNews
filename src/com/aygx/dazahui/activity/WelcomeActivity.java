@@ -10,6 +10,7 @@ import android.os.Message;
 import android.view.Window;
 
 import com.aygx.dazahui.R;
+import com.aygx.dazahui.db.MyDisportDb;
 import com.aygx.dazahui.db.MyReDianNewsDb;
 import com.aygx.dazahui.db.MyShiShiNewDb;
 import com.aygx.dazahui.utils.ShareUtils;
@@ -24,9 +25,10 @@ public class WelcomeActivity extends Activity {
 		
 		//创建实时新闻的数据库
 		MyShiShiNewDb db = new MyShiShiNewDb(this);
-		SQLiteDatabase writableDatabase = db.getWritableDatabase();
+		
 		MyReDianNewsDb redianDb = new MyReDianNewsDb(this);
-		SQLiteDatabase sb = redianDb.getWritableDatabase();
+		
+		MyDisportDb disport = new MyDisportDb(this);
 		
 		handler.sendEmptyMessageDelayed(0, 200);
 	}

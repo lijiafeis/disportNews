@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -196,4 +197,31 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 		// 启动分享GUI
 		 oks.show(this);
 		 }
+	
+	
+	//进行手势的判断finish当前的页面
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		int startX = 0;
+		int startY = 0;
+		switch (event.getAction()){
+		case MotionEvent.ACTION_DOWN:
+			startX = (int) event.getX();
+			startY = (int) event.getY();
+			break;
+		case MotionEvent.ACTION_UP:
+			int endX = (int) event.getX();
+			int endY = (int) event.getY();
+			if(endX - startX > 300){
+				finish();
+			}
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+	
+	
+	
 }

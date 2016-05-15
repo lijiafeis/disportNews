@@ -23,11 +23,11 @@ import com.aygx.dazahui.view.MyListView;
 import com.aygx.dazahui.view.MyListView.OnRefreshListener;
 
 public class OneActivity extends BaseAdapter implements OnItemClickListener {
-	private MyListView listView;
+	public MyListView listView;
 	public static List<String> list;// 记录显示条目
-	public boolean isLoaddingPager = false;
+	public boolean isLoaddingPager = false; //点击返回来是否显示在原来的位置
 	public static final String NEWS_TITILE = "news_titile";
-	
+
 	// public static Handler handler = new Handler(){
 	// public void handleMessage(android.os.Message msg) {
 	// list = (List<String>) msg.obj;
@@ -38,7 +38,7 @@ public class OneActivity extends BaseAdapter implements OnItemClickListener {
 	public OneActivity(Activity mActivity) {
 		super(mActivity);
 	}
-
+	
 	@Override
 	public void initView() {
 		super.initView();
@@ -65,7 +65,7 @@ public class OneActivity extends BaseAdapter implements OnItemClickListener {
 	}
 
 	private NewsConnect newsConnect;
-	private int item;
+	public int item;
 
 	private void getListViewData() {
 		getDataFromDb();
@@ -113,7 +113,7 @@ public class OneActivity extends BaseAdapter implements OnItemClickListener {
 //		System.out.println(arg2);
 		Intent intent = new Intent(mActivity, LoaddingNewsActivity.class);
 		intent.putExtra(NEWS_TITILE, list.get(arg2 -1));
-		mActivity.startActivity(intent);
+		mActivity.startActivityForResult(intent, 0);
 		isLoaddingPager = true;
 		item = arg2;
 		mActivity.overridePendingTransition(R.anim.left, R.anim.right);
