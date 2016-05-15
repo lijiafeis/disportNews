@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <ListView
+            android:layout_centerInParent="true"
+            android:id="@+id/news_loading_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#212121"
+            android:divider="@null" >
+        </ListView>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
