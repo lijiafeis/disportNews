@@ -13,10 +13,12 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.fragment.NewsFragment;
+import com.aygx.dazahui.fragment.PicFragment;
 import com.aygx.dazahui.fragment.PlayFragment;
 import com.aygx.dazahui.fragment.SettingFragment;
 import com.aygx.dazahui.fragment.UtilsFragment;
@@ -24,19 +26,19 @@ import com.aygx.dazahui.fragment.news.OneActivity;
 import com.aygx.dazahui.utils.Utils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements OnClickListener {
 	private ImageView icon;// 左上角的图标，点击打开侧滑栏
 	private SlidingMenu menu;
 	private RadioGroup group;
 	private FragmentManager supportFragmentManager;
-
+	private static PlayFragment playFragment;//方便趣图获取得到pic的信息。
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.activity_main);
-
+		initView();
 		setSlidingMenu(); // 设置侧滑菜单
 
 		setImageViewIcon();// 设置点击坐上角的图标显示侧滑菜单
@@ -45,18 +47,38 @@ public class MainActivity extends FragmentActivity {
 
 	}
 
+	private void initView() {
+		TextView pic_textView = (TextView) findViewById(R.id.pic);
+		pic_textView.setOnClickListener(this);
+	}
+
+	//点击上面的趣图按钮。
+	@Override
+	public void onClick(View arg0) {
+		changerFragment(new PicFragment(), true);
+	}
+	
+	public static PlayFragment getPlayFragment(){
+		if(playFragment != null){
+			return playFragment;
+		}
+		return null;
+	}
+	
+	
 	private boolean flag = false;
 	private long currentTimeMillis;
+
 	@Override
 	public void onBackPressed() {
 		if (flag) {
-			long currentTimeMillis2 =  System.currentTimeMillis();
+			long currentTimeMillis2 = System.currentTimeMillis();
 			System.out.println(currentTimeMillis2);
-			if(System.currentTimeMillis() - currentTimeMillis < 3000)
-				
+			if (System.currentTimeMillis() - currentTimeMillis < 3000)
+
 				finish();
-			else{
-				flag =!flag;
+			else {
+				flag = !flag;
 			}
 		} else {
 			Utils.showToast(this, "再按一次退出应用");
@@ -76,6 +98,8 @@ public class MainActivity extends FragmentActivity {
 
 		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
+			
+
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
 				switch (arg1) {
@@ -83,7 +107,8 @@ public class MainActivity extends FragmentActivity {
 					changerFragment(new NewsFragment(), true);
 					break;
 				case R.id.btn_2:
-					changerFragment(new PlayFragment(), true);
+					playFragment = new PlayFragment();
+					changerFragment(playFragment, true);
 					break;
 				case R.id.btn_3:
 					changerFragment(new UtilsFragment(), true);
@@ -143,6 +168,5 @@ public class MainActivity extends FragmentActivity {
 		// 为侧滑菜单设置布局
 		menu.setMenu(R.layout.activity_home_left_menu);
 	}
-	
-	
+
 }

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.aygx.dazahui.db.MyDisportDb;
+import com.aygx.dazahui.db.MyJokeDb;
+import com.aygx.dazahui.db.MyPicDb;
 import com.aygx.dazahui.db.MyReDianNewsDb;
 import com.aygx.dazahui.db.MyShiShiNewDb;
 
@@ -18,7 +20,13 @@ public class DBUtils {
 
 	private static MyDisportDb disport;
 	private static SQLiteDatabase disport_db;
+	
+	private static MyJokeDb jokeDb;
+	private static SQLiteDatabase joke_db;
 
+	private static MyPicDb picDb;
+	private static SQLiteDatabase pic_db;
+	
 	public static void insertAllForShiShi(Context context, ContentValues values) {
 		if (sqlite == null) {
 			sqlite = new MyShiShiNewDb(context);
@@ -128,5 +136,63 @@ public class DBUtils {
 		disport_db.insert(MyDisportDb.TABLE_NAME, null, values);
 		disport_db.close();
 	}
+	
+	
+	/*
+	 * 从网上的到的数据joke，保存到数据库中去。
+	 */
+	public static void insertAllForJoke(Context context, ContentValues values) {
+		if (jokeDb == null) {
+			jokeDb = new MyJokeDb(context);
+		}
+		
+		joke_db = jokeDb.getWritableDatabase();
+		joke_db.insert(MyJokeDb.TABLE_NAME, null, values);
+		joke_db.close();
+	}
+	
+	
+	/*
+	 * 对从网上解析的数据进行全部的查找MyDisport数据库
+	 */
+	public static Cursor quiryAllForJoke(Context context) {
+		if (jokeDb == null) {
+			jokeDb = new MyJokeDb(context);
+		}
+		joke_db = jokeDb.getReadableDatabase();
+		Cursor query = joke_db.query(MyJokeDb.TABLE_NAME, null, null,
+				null, null, null, null);
+		return query;
 
+	}
+	
+	/*
+	 * 从网上的到的数据joke，保存到数据库中去。
+	 */
+	public static void insertAllForPic(Context context, ContentValues values) {
+		if (picDb == null) {
+			picDb = new MyPicDb(context);
+		}
+		
+		pic_db = picDb.getWritableDatabase();
+		pic_db.insert(MyPicDb.TABLE_NAME, null, values);
+		pic_db.close();
+	}
+	
+	
+	/*
+	 * 对从网上解析的数据进行全部的查找MyDisport数据库
+	 */
+	public static Cursor quiryAllForPic(Context context) {
+		if (picDb == null) {
+			picDb = new MyPicDb(context);
+		}
+		pic_db = picDb.getWritableDatabase();
+		Cursor query = pic_db.query(MyPicDb.TABLE_NAME, null, null,
+				null, null, null, null);
+		return query;
+
+	}
+
+	
 }

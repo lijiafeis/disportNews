@@ -11,6 +11,8 @@ import android.view.Window;
 
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.db.MyDisportDb;
+import com.aygx.dazahui.db.MyJokeDb;
+import com.aygx.dazahui.db.MyPicDb;
 import com.aygx.dazahui.db.MyReDianNewsDb;
 import com.aygx.dazahui.db.MyShiShiNewDb;
 import com.aygx.dazahui.utils.ShareUtils;
@@ -22,17 +24,20 @@ public class WelcomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
-		
-		//创建实时新闻的数据库
+
+		// 创建实时新闻的数据库
 		MyShiShiNewDb db = new MyShiShiNewDb(this);
-		
+		// 创建热点新闻的数据库
 		MyReDianNewsDb redianDb = new MyReDianNewsDb(this);
-		
+		// 创建娱乐新闻的数据库
 		MyDisportDb disport = new MyDisportDb(this);
-		
+		// 创建Joke的数据库
+		MyJokeDb jokedb = new MyJokeDb(this);
+		//创建pic数据库
+		MyPicDb picDb = new MyPicDb(this);
 		handler.sendEmptyMessageDelayed(0, 200);
 	}
-	
+
 	private Handler handler = new Handler(new Callback() {
 
 		@Override

@@ -102,7 +102,8 @@ public class OneActivity extends BaseAdapter implements OnItemClickListener {
 			}
 			// System.out.println(list);
 		} else {
-			Utils.showToast(mActivity, "请下拉刷新");
+			newsConnect = new NewsConnect(mActivity, listView, list);
+			newsConnect.getRequest2();
 		}
 
 	}

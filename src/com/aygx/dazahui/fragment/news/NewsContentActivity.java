@@ -73,16 +73,16 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 	private String title;
 	// 处理与网页有关的操作
 	private void setWebView() {
-		getTitleForJsoup();
+//		getTitleForJsoup();
 			
 		
 		webView.loadUrl(url);
 		webView.requestFocus();
 		WebSettings settings = webView.getSettings();
 		settings.setSupportZoom(true); // 支持缩放
-		settings.setBuiltInZoomControls(true); // 启用内置缩放装置
-		settings.setJavaScriptEnabled(true); // 启用JS脚本
-		settings.setUseWideViewPort(false); // 将图片调整到适合webview的大小
+//		settings.setBuiltInZoomControls(true); // 启用内置缩放装置
+//		settings.setJavaScriptEnabled(true); // 启用JS脚本
+		settings.setUseWideViewPort(true); // 将图片调整到适合webview的大小
 		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webView.setWebViewClient(new WebViewClient() {
 			// 当点击链接时,希望覆盖而不是打开新窗口

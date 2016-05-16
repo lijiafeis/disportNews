@@ -107,7 +107,7 @@ public class TwoActivity extends BaseAdapter implements OnItemClickListener {
 
 			// System.out.println(list);
 		} else {
-			Utils.showToast(mActivity, "请下拉刷新");
+			getDataForJsoup();
 		}
 
 	}
@@ -213,7 +213,7 @@ public class TwoActivity extends BaseAdapter implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(mActivity, NewsContentActivity.class);
 		System.out.println("你点的是第" + arg2 + "个新闻");
-		String url = dbList.get(arg2).getUrl();
+		String url = dbList.get(arg2-1).getUrl();
 		intent.putExtra(LoaddingNewsActivity.URL, url);
 		mActivity.startActivity(intent);
 		mActivity.overridePendingTransition(R.anim.go, R.anim.loading_news);
