@@ -67,6 +67,20 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		linearLayout = (LinearLayout) view.findViewById(R.id.linearLayout);
 		nickName = (TextView) view.findViewById(R.id.nickName);
 		userName = (TextView) view.findViewById(R.id.userName);
+
+		// 对下面的几个条目进行设置。
+		TextView safe = (TextView) view.findViewById(R.id.safe);
+		TextView system_Setting = (TextView) view.findViewById(R.id.system_setting);
+		TextView idea = (TextView) view.findViewById(R.id.idea);
+		TextView app = (TextView) view.findViewById(R.id.app);
+		
+		//设计点击事件
+		safe.setOnClickListener(this);
+		system_Setting.setOnClickListener(this);
+		idea.setOnClickListener(this);
+		app.setOnClickListener(this);
+		
+		
 		if (isRegister) {
 			linearLayout.setVisibility(View.VISIBLE);
 			landing.setVisibility(View.GONE);
@@ -111,6 +125,17 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Intent intent = new Intent(getActivity(), RegisterActivity.class);
 			startActivityForResult(intent, 1);
 			break;
+		//点击下面的几个条目
+		case R.id.safe:
+			break;
+		case R.id.system_setting:
+			break;
+		case R.id.idea:
+			break;
+		case R.id.app:
+			break;
+			
+			
 		default:
 			break;
 		}
