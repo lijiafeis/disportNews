@@ -22,8 +22,11 @@ import cn.bmob.v3.listener.FindCallback;
 import cn.bmob.v3.listener.FindListener;
 
 import com.aygx.dazahui.R;
+import com.aygx.dazahui.activity.AccountSafeActivity;
+import com.aygx.dazahui.activity.IdeaActivity;
 import com.aygx.dazahui.activity.LoginActivity;
 import com.aygx.dazahui.activity.RegisterActivity;
+import com.aygx.dazahui.activity.UserKnowActivity;
 import com.aygx.dazahui.bean.user.MyUser;
 import com.aygx.dazahui.utils.ShareUtils;
 
@@ -69,41 +72,26 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		userName = (TextView) view.findViewById(R.id.userName);
 
 		// 对下面的几个条目进行设置。
-		TextView safe = (TextView) view.findViewById(R.id.safe);
-		TextView system_Setting = (TextView) view.findViewById(R.id.system_setting);
-		TextView idea = (TextView) view.findViewById(R.id.idea);
-		TextView app = (TextView) view.findViewById(R.id.app);
-		
-		//设计点击事件
+		Button safe = (Button) view.findViewById(R.id.safe);
+		Button system_Setting = (Button) view.findViewById(R.id.system_setting);
+		Button idea = (Button) view.findViewById(R.id.idea);
+		Button app = (Button) view.findViewById(R.id.app);
+		Button know = (Button) view.findViewById(R.id.know);
+		// 设计点击事件
 		safe.setOnClickListener(this);
 		system_Setting.setOnClickListener(this);
 		idea.setOnClickListener(this);
 		app.setOnClickListener(this);
+		know.setOnClickListener(this);
+		
 		
 		
 		if (isRegister) {
 			linearLayout.setVisibility(View.VISIBLE);
 			landing.setVisibility(View.GONE);
 			register.setVisibility(View.GONE);
-			BmobQuery<MyUser> query = new BmobQuery<MyUser>();
 			String[] userName2 = ShareUtils.getUserName(getActivity());
-			query.addWhereEqualTo("username", userName2[0]);
-			query.findObjects(getActivity(), new FindListener<MyUser>() {
-
-				@Override
-				public void onSuccess(List<MyUser> arg0) {
-					for (MyUser myUser : arg0) {
-						nickName.setText("昵称:" + myUser.getNickName());
-
-					}
-				}
-
-				@Override
-				public void onError(int arg0, String arg1) {
-					System.out.println(arg1);
-				}
-			});
-
+			nickName.setText("昵称:" + ShareUtils.getUserNick(getActivity()));
 			userName.setText("帐号:" + userName2[0]);
 		} else {
 			linearLayout.setVisibility(View.GONE);
@@ -125,17 +113,31 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Intent intent = new Intent(getActivity(), RegisterActivity.class);
 			startActivityForResult(intent, 1);
 			break;
-		//点击下面的几个条目
+		// 点击下面的几个条目
+		//帐号安全的设置
 		case R.id.safe:
+
+			Intent intent_safe = new Intent(getActivity(),
+					AccountSafeActivity.class);
+			startActivityForResult(intent_safe, 1);
 			break;
+		//点击是系统设置的页面
 		case R.id.system_setting:
 			break;
+		//点击是意见反馈的页面
 		case R.id.idea:
+			Intent intent_idea = new Intent(getActivity(),
+					IdeaActivity.class);
+			startActivityForResult(intent_idea, 1);
+
 			break;
+		//精彩推荐
 		case R.id.app:
 			break;
-			
-			
+		//用户须知
+		case R.id.know:
+			startActivity(new Intent(getActivity(),UserKnowActivity.class));
+			break;
 		default:
 			break;
 		}

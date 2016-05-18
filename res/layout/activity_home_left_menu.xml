@@ -2,9 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
-    android:background="#0501B2"
-    android:gravity="right">
-    
+    android:gravity="right"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/sildingMenu_frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </LinearLayout>

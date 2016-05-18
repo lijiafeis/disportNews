@@ -28,9 +28,13 @@
         android:theme="@style/AppTheme" >
         <activity android:name="com.aygx.dazahui.activity.MainActivity" >
         </activity>
+        <activity android:name="com.aygx.dazahui.activity.AccountSafeActivity"></activity>
         <activity android:name="com.aygx.dazahui.activity.RegisterActivity"></activity>
        	<activity android:name="com.aygx.dazahui.activity.LoginActivity"></activity>
-        <activity
+       	<activity android:name="com.aygx.dazahui.activity.IdeaActivity"></activity>
+      	<activity android:name="com.aygx.dazahui.activity.CollectActivity"></activity>
+       		<activity android:name="com.aygx.dazahui.activity.UserKnowActivity"></activity>
+       	<activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"

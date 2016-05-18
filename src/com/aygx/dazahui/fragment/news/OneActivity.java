@@ -114,7 +114,7 @@ public class OneActivity extends BaseAdapter implements OnItemClickListener {
 //		System.out.println(arg2);
 		Intent intent = new Intent(mActivity, LoaddingNewsActivity.class);
 		intent.putExtra(NEWS_TITILE, list.get(arg2 -1));
-		mActivity.startActivityForResult(intent, 0);
+		mActivity.startActivity(intent);
 		isLoaddingPager = true;
 		item = arg2;
 		mActivity.overridePendingTransition(R.anim.left, R.anim.right);

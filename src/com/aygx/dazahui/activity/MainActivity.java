@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.SaveListener;
 
 import com.aygx.dazahui.R;
@@ -22,6 +23,7 @@ import com.aygx.dazahui.fragment.NewsFragment;
 import com.aygx.dazahui.fragment.PicFragment;
 import com.aygx.dazahui.fragment.PlayFragment;
 import com.aygx.dazahui.fragment.SettingFragment;
+import com.aygx.dazahui.fragment.SildingMenuFragment;
 import com.aygx.dazahui.fragment.UtilsFragment;
 import com.aygx.dazahui.utils.ShareUtils;
 import com.aygx.dazahui.utils.Utils;
@@ -32,17 +34,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private SlidingMenu menu;
 	private RadioGroup group;
 	private FragmentManager supportFragmentManager;
-	private static PlayFragment playFragment;//方便趣图获取得到pic的信息。
+	private static PlayFragment playFragment;// 方便趣图获取得到pic的信息。
 	private boolean isLogin = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
-		
-//		login();
-		
-		
+
+		login();
+
 		setContentView(R.layout.activity_main);
 		initView();
 		setSlidingMenu(); // 设置侧滑菜单
@@ -54,44 +55,43 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void login() {
-		//自动登陆
+		// 自动登陆
 		String[] userName = ShareUtils.getUserName(this);
 		MyUser myUser = new MyUser();
 		myUser.setUsername(userName[0]);
 		myUser.setPassword(userName[1]);
 		myUser.login(this, new SaveListener() {
-			
+
 			@Override
 			public void onSuccess() {
 				ShareUtils.setlogin(MainActivity.this, true);
 			}
-			
+
 			@Override
 			public void onFailure(int arg0, String arg1) {
-				
+
 			}
 		});
 	}
 
-	private void initView(){
+	private void initView() {
 		TextView pic_textView = (TextView) findViewById(R.id.pic);
 		pic_textView.setOnClickListener(this);
 	}
 
-	//点击上面的趣图按钮。
+	// 点击上面的趣图按钮。
 	@Override
 	public void onClick(View arg0) {
 		changerFragment(new PicFragment(), true);
 	}
-	
-	public static PlayFragment getPlayFragment(){
-		if(playFragment != null){
+
+	public static PlayFragment getPlayFragment() {
+		if (playFragment != null) {
 			return playFragment;
 		}
 		return null;
 	}
-	
-	
+
 	private boolean flag = false;
 	private long currentTimeMillis;
 
@@ -100,11 +100,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if (flag) {
 			long currentTimeMillis2 = System.currentTimeMillis();
 			System.out.println(currentTimeMillis2);
-			if (System.currentTimeMillis() - currentTimeMillis < 3000){
+			if (System.currentTimeMillis() - currentTimeMillis < 3000) {
 				ShareUtils.setlogin(this, false);
+				BmobUser.logOut(this);
 				finish();
-			}
-			else {
+			} else {
 				flag = !flag;
 			}
 		} else {
@@ -118,24 +118,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private void setRadioButton() {
 		group = (RadioGroup) findViewById(R.id.home_radioGroup);
-		if(!isLogin){
-			
+		if (!isLogin) {
 			RadioButton btn_1 = (RadioButton) group.getChildAt(0);
 			btn_1.setChecked(true);
 			supportFragmentManager = getSupportFragmentManager();
 			changerFragment(new NewsFragment(), false);
-		}else{
+		} else {
 			System.out.println("RadioButton");
 			RadioButton btn_1 = (RadioButton) group.getChildAt(3);
 			btn_1.setChecked(true);
 			supportFragmentManager = getSupportFragmentManager();
 			changerFragment(new SettingFragment(), false);
+			isLogin = !isLogin;
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.sildingMenu_frameLayout,
+							new SildingMenuFragment()).commit();
 		}
 
 		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-			
-
 			private Bundle bundle;
 
 			@Override
@@ -206,15 +207,29 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
 		// 为侧滑菜单设置布局
 		menu.setMenu(R.layout.activity_home_left_menu);
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.sildingMenu_frameLayout,
+						new SildingMenuFragment()).commit();
 	}
-	
+
 	@Override
 	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
 		super.onActivityResult(arg0, arg1, arg2);
-			isLogin = true;
-			System.out.println(".............");
-			setRadioButton();
+		isLogin = true;
+		setRadioButton();
 	}
+
 	
 	
+	
+	
+//	/*
+//	 * 对SildingMenu事件的处理
+//	 */
+//
+//	public void collect(View v) {
+//		
+//	}
+
 }

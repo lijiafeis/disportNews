@@ -42,4 +42,17 @@ public class ShareUtils {
 		return new String[]{userName,passWord};
 	}
 	
+	
+	
+	//当登陆的时候，保存用户的昵称。
+		public static void setUserNick(Context context,String userNick){
+			Editor edit = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE).edit();
+			edit.putString("nick",userNick).commit();
+		}
+		public static String getUserNick(Context context){
+			String userNick = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE).getString("nick","");
+			return userNick;
+		}
+	
+	
 }
