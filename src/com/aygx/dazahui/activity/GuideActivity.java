@@ -26,6 +26,10 @@ public class GuideActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_guide);
+		
+		//判断share中有没有帐号。
+		
+		
 		viewPager = (ViewPager) findViewById(R.id.viewPager);
 		button = (Button) findViewById(R.id.guide_button);
 		init();

@@ -8,11 +8,13 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.adapter.Loading_listView_Adapter;
@@ -23,15 +25,14 @@ import com.aygx.dazahui.network.NewsConnect;
 import com.aygx.dazahui.utils.DBUtils;
 import com.aygx.dazahui.utils.Utils;
 import com.google.gson.Gson;
-import com.lidroid.xutils.view.annotation.event.OnKey;
 
 public class LoaddingNewsActivity extends Activity implements
-		OnItemClickListener {
+		OnItemClickListener, OnClickListener {
 	private String title = null;
 	private ListView loaddingListView;
-	
+
 	public static final String URL = "url";
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,10 +49,15 @@ public class LoaddingNewsActivity extends Activity implements
 
 	private void initView() {
 		loaddingListView = (ListView) findViewById(R.id.news_loading_listView);
+
+		TextView tv1 = (TextView) findViewById(R.id.loading_textView1);
+		TextView tv2 = (TextView) findViewById(R.id.loading_textView2);
+		tv1.setOnClickListener(this);
+		tv2.setOnClickListener(this);
 		AlphaAnimation alpha = new AlphaAnimation(0.0f, 1.0f);
 		alpha.setDuration(2000);
 		loaddingListView.setAnimation(alpha);
-	
+
 	}
 
 	private void getIntentString() {
@@ -93,12 +99,20 @@ public class LoaddingNewsActivity extends Activity implements
 		loaddingListView.setOnItemClickListener(this);
 	}
 
+	
+
+	@Override
+	public void onClick(View arg0) {
+		finish();
+	}
+	
+	
 	// 点击条目执行的方法。
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(this, NewsContentActivity.class);
 		System.out.println("你点的是第" + arg2 + "个新闻");
-		
+
 		setDataToDb(arg2);
 		String url = newsList.get(arg2).getUrl();
 		intent.putExtra(URL, url);
@@ -118,29 +132,28 @@ public class LoaddingNewsActivity extends Activity implements
 			// 数据库中没有这条数据
 			if (cv == null) {
 				cv = new ContentValues();
-			}else{
+			} else {
 				cv.clear();
 			}
-			cv.put(MyReDianNewsDb.SHISHI_ID, title);//添加实时新闻的标题
+			cv.put(MyReDianNewsDb.SHISHI_ID, title);// 添加实时新闻的标题
 			cv.put(MyReDianNewsDb.TITLE, result.getTitle());
-			cv.put(MyReDianNewsDb.CONTENT,result.getContent());
+			cv.put(MyReDianNewsDb.CONTENT, result.getContent());
 			cv.put(MyReDianNewsDb.IMG_WIDTH, result.getImg_width());
 			cv.put(MyReDianNewsDb.FULL_TITLE, result.getFull_title());
 			cv.put(MyReDianNewsDb.PDATE, result.getPdate());
-			cv.put(MyReDianNewsDb.IMG_LENGTH,result.getImg_length());
+			cv.put(MyReDianNewsDb.IMG_LENGTH, result.getImg_length());
 			cv.put(MyReDianNewsDb.IMG_URL, result.getImg());
 			cv.put(MyReDianNewsDb.NEWS_URL, result.getUrl());
 			cv.put(MyReDianNewsDb.PDATE_SRC, result.getPdate_src());
-			
-			DBUtils.insertAllForReDian(this,cv);
+
+			DBUtils.insertAllForReDian(this, cv);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		setResult(1, intent);
 		finish();
 	}
-	
 
 }

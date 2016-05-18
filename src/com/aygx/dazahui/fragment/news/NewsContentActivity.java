@@ -71,17 +71,17 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 	}
 
 	private String title;
+
 	// 处理与网页有关的操作
 	private void setWebView() {
-//		getTitleForJsoup();
-			
-		
+		// getTitleForJsoup();
+
 		webView.loadUrl(url);
 		webView.requestFocus();
 		WebSettings settings = webView.getSettings();
 		settings.setSupportZoom(true); // 支持缩放
-//		settings.setBuiltInZoomControls(true); // 启用内置缩放装置
-//		settings.setJavaScriptEnabled(true); // 启用JS脚本
+		// settings.setBuiltInZoomControls(true); // 启用内置缩放装置
+		// settings.setJavaScriptEnabled(true); // 启用JS脚本
 		settings.setUseWideViewPort(true); // 将图片调整到适合webview的大小
 		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webView.setWebViewClient(new WebViewClient() {
@@ -91,14 +91,14 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 				view.loadUrl(url); // 加载新的url
 				return true; // 返回true,代表事件已处理,事件流到此终止
 			}
-			
+
 			@Override
 			public void onReceivedError(WebView view, int errorCode,
 					String description, String failingUrl) {
 				Utils.showToast(NewsContentActivity.this, "访问出错");
 				super.onReceivedError(view, errorCode, description, failingUrl);
 			}
-			
+
 		});
 
 		// 点击后退按钮,让WebView后退一页(也可以覆写Activity的onKeyDown方法)
@@ -130,21 +130,20 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 
 	private void getTitleForJsoup() {
 		System.out.println("访问网络的地址" + url);
-			new Thread(){
-				
+		new Thread() {
 
-				@Override
-				public void run() {
-					super.run();
-					Document document;
-					try {
-						document = Jsoup.connect(url).get();
-						title = document.title();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+			@Override
+			public void run() {
+				super.run();
+				Document document;
+				try {
+					document = Jsoup.connect(url).get();
+					title = document.title();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			}.start();
+			}
+		}.start();
 	}
 
 	// 点击上面返回和分享的时候
@@ -169,59 +168,83 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 	private void shareApp() {
 		showShare();
 	}
-	private void showShare() {
-		 ShareSDK.initSDK(this);
-		 OnekeyShare oks = new OnekeyShare();
-		 //关闭sso授权
-		 oks.disableSSOWhenAuthorize(); 
 
-		// 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-		 //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-		 // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-		 oks.setTitle(title);
-		 // titleUrl是网和QQ标题的网络链接，仅在人人空间使用
-		 oks.setTitleUrl(url);
-		 // text是分享文本，所有平台都需要这个字段
-		 oks.setText(title);
-		 // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-		 //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-		 // url仅在微信（包括好友和朋友圈）中使用
-		 oks.setUrl(url);
-		 // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-		 oks.setComment("我是测试评论文本");
-		 // site是分享此内容的网站名称，仅在QQ空间使用
-		 oks.setSite(getString(R.string.app_name));
-		 // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-		 oks.setSiteUrl(url);
+	private void showShare() {
+		ShareSDK.initSDK(this);
+		OnekeyShare oks = new OnekeyShare();
+		// 关闭sso授权
+		oks.disableSSOWhenAuthorize();
+
+		// 分享时Notification的图标和文字 2.5.9以后的版本不调用此方法
+		// oks.setNotification(R.drawable.ic_launcher,
+		// getString(R.string.app_name));
+		// title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+		oks.setTitle(title);
+		// titleUrl是网和QQ标题的网络链接，仅在人人空间使用
+		oks.setTitleUrl(url);
+		// text是分享文本，所有平台都需要这个字段
+		oks.setText(title);
+		// imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+		// oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+		// url仅在微信（包括好友和朋友圈）中使用
+		oks.setUrl(url);
+		// comment是我对这条分享的评论，仅在人人网和QQ空间使用
+		oks.setComment("我是测试评论文本");
+		// site是分享此内容的网站名称，仅在QQ空间使用
+		oks.setSite(getString(R.string.app_name));
+		// siteUrl是分享此内容的网站地址，仅在QQ空间使用
+		oks.setSiteUrl(url);
 
 		// 启动分享GUI
-		 oks.show(this);
-		 }
-	
-	
-	//进行手势的判断finish当前的页面
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		int startX = 0;
-		int startY = 0;
-		switch (event.getAction()){
-		case MotionEvent.ACTION_DOWN:
-			startX = (int) event.getX();
-			startY = (int) event.getY();
-			break;
-		case MotionEvent.ACTION_UP:
-			int endX = (int) event.getX();
-			int endY = (int) event.getY();
-			if(endX - startX > 300){
-				finish();
-			}
-			break;
-		default:
-			break;
-		}
-		return true;
+		oks.show(this);
 	}
-	
-	
-	
+
+	// 进行手势的判断finish当前的页面
+	// @Override
+	// public boolean onTouchEvent(MotionEvent event) {
+	// int startX = 0;
+	// int startY = 0;
+	// switch (event.getAction()){
+	// case MotionEvent.ACTION_DOWN:
+	// startX = (int) event.getX();
+	// startY = (int) event.getY();
+	// break;
+	// case MotionEvent.ACTION_UP:
+	// int endX = (int) event.getX();
+	// int endY = (int) event.getY();
+	// if(endX - startX > 300){
+	// finish();
+	// }
+	// break;
+	// default:
+	// break;
+	// }
+	// return true;
+	// }
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent event) {
+//		int startX = 0;
+//		int startY = 0;
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_DOWN:
+//			startX = (int) event.getX();
+//			startY = (int) event.getY();
+//			break;
+//		case MotionEvent.ACTION_UP:
+//			int endX = (int) event.getX();
+//			int endY = (int) event.getY();
+//			if (endX - startX > 500 && Math.abs(endY - startY)<100) {
+//				System.out.println(endX - startX);
+//				finish();
+//			}
+//			if (Math.abs(endY - startY) > 100) {
+//				return false;
+//			}
+//			break;
+//		default:
+//			break;
+//		}
+//		return false;
+//	}
+
 }

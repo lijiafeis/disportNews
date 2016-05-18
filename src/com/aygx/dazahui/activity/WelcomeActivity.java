@@ -9,6 +9,8 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.view.Window;
 
+import cn.bmob.v3.Bmob;
+
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.db.MyDisportDb;
 import com.aygx.dazahui.db.MyJokeDb;
@@ -22,9 +24,11 @@ public class WelcomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Bmob.initialize(this, "f62ff6bd8e329e363296c6a69834ca94");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
-
+		
 		// 创建实时新闻的数据库
 		MyShiShiNewDb db = new MyShiShiNewDb(this);
 		// 创建热点新闻的数据库

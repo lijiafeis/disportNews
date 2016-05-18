@@ -14,15 +14,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
-import android.widget.Toast;
+import cn.bmob.v3.listener.SaveListener;
 
 import com.aygx.dazahui.R;
+import com.aygx.dazahui.bean.user.MyUser;
 import com.aygx.dazahui.fragment.NewsFragment;
 import com.aygx.dazahui.fragment.PicFragment;
 import com.aygx.dazahui.fragment.PlayFragment;
 import com.aygx.dazahui.fragment.SettingFragment;
 import com.aygx.dazahui.fragment.UtilsFragment;
-import com.aygx.dazahui.fragment.news.OneActivity;
+import com.aygx.dazahui.utils.ShareUtils;
 import com.aygx.dazahui.utils.Utils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
@@ -32,11 +33,16 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private RadioGroup group;
 	private FragmentManager supportFragmentManager;
 	private static PlayFragment playFragment;//方便趣图获取得到pic的信息。
+	private boolean isLogin = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+		
+		
+//		login();
+		
+		
 		setContentView(R.layout.activity_main);
 		initView();
 		setSlidingMenu(); // 设置侧滑菜单
@@ -47,7 +53,27 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	}
 
-	private void initView() {
+	private void login() {
+		//自动登陆
+		String[] userName = ShareUtils.getUserName(this);
+		MyUser myUser = new MyUser();
+		myUser.setUsername(userName[0]);
+		myUser.setPassword(userName[1]);
+		myUser.login(this, new SaveListener() {
+			
+			@Override
+			public void onSuccess() {
+				ShareUtils.setlogin(MainActivity.this, true);
+			}
+			
+			@Override
+			public void onFailure(int arg0, String arg1) {
+				
+			}
+		});
+	}
+
+	private void initView(){
 		TextView pic_textView = (TextView) findViewById(R.id.pic);
 		pic_textView.setOnClickListener(this);
 	}
@@ -74,9 +100,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if (flag) {
 			long currentTimeMillis2 = System.currentTimeMillis();
 			System.out.println(currentTimeMillis2);
-			if (System.currentTimeMillis() - currentTimeMillis < 3000)
-
+			if (System.currentTimeMillis() - currentTimeMillis < 3000){
+				ShareUtils.setlogin(this, false);
 				finish();
+			}
 			else {
 				flag = !flag;
 			}
@@ -91,14 +118,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 	private void setRadioButton() {
 		group = (RadioGroup) findViewById(R.id.home_radioGroup);
-		RadioButton btn_1 = (RadioButton) group.getChildAt(0);
-		btn_1.setChecked(true);
-		supportFragmentManager = getSupportFragmentManager();
-		changerFragment(new NewsFragment(), false);
+		if(!isLogin){
+			
+			RadioButton btn_1 = (RadioButton) group.getChildAt(0);
+			btn_1.setChecked(true);
+			supportFragmentManager = getSupportFragmentManager();
+			changerFragment(new NewsFragment(), false);
+		}else{
+			System.out.println("RadioButton");
+			RadioButton btn_1 = (RadioButton) group.getChildAt(3);
+			btn_1.setChecked(true);
+			supportFragmentManager = getSupportFragmentManager();
+			changerFragment(new SettingFragment(), false);
+		}
 
 		group.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			
+
+			private Bundle bundle;
 
 			@Override
 			public void onCheckedChanged(RadioGroup arg0, int arg1) {
@@ -114,7 +152,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 					changerFragment(new UtilsFragment(), true);
 					break;
 				case R.id.btn_4:
-					changerFragment(new SettingFragment(), true);
+					SettingFragment settingFragment = new SettingFragment();
+					changerFragment(settingFragment, true);
 					break;
 				default:
 					break;
@@ -168,5 +207,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		// 为侧滑菜单设置布局
 		menu.setMenu(R.layout.activity_home_left_menu);
 	}
-
+	
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		super.onActivityResult(arg0, arg1, arg2);
+			isLogin = true;
+			System.out.println(".............");
+			setRadioButton();
+	}
+	
+	
 }

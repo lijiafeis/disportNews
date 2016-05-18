@@ -1,12 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="设置" />
+    <RelativeLayout
+        android:id="@+id/setting_relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#D38C6D" >
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/defult" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_toRightOf="@id/imageView"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/nickName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/landing"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/button_landing"
+            android:text="登录" />
+
+        <Button
+            android:id="@+id/register"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/button_landing"
+            android:gravity="center"
+            android:text="注册" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/setting_relativeLayout"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="帐号和安全" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="系统设置" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="意见反馈" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="精彩推荐" />
+    </LinearLayout>
+
+</RelativeLayout>
