@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="80dp"
+        android:background="#D38C6D" >
+
+        <ImageView
+            android:id="@+id/sildingMenu_img"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/defult" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/sildingMenu_img"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/silding_nickName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:text="昵称 未登录" />
+
+            <TextView
+                android:id="@+id/silding_userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:text="帐号 未登录" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/collect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="收藏" />
+
+</LinearLayout>
