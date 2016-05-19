@@ -54,6 +54,8 @@ public class LoginActivity extends Activity {
 				Utils.showToast(LoginActivity.this, "登录成功");
 				ShareUtils.setlogin(LoginActivity.this, true);
 				ShareUtils.setUserName(LoginActivity.this, user, pass);
+				MyCollectDb collectDb = new MyCollectDb(LoginActivity.this);
+				SQLiteDatabase db = collectDb.getWritableDatabase();
 				BmobQuery<MyUser> query = new BmobQuery<MyUser>();
 				String[] userName2 = ShareUtils.getUserName(LoginActivity.this);
 				query.addWhereEqualTo("username", userName2[0]);
@@ -64,8 +66,6 @@ public class LoginActivity extends Activity {
 							System.out.println(nickName);
 							ShareUtils.setUserNick(LoginActivity.this, nickName);
 							setResult(2, getIntent());
-							MyCollectDb collectDb = new MyCollectDb(LoginActivity.this);
-							SQLiteDatabase db = collectDb.getWritableDatabase();
 							finish();
 						}
 					};
