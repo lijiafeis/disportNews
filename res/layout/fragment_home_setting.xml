@@ -8,7 +8,7 @@
         android:id="@+id/setting_relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#D38C6D" >
+        android:background="@drawable/loginbg" >
 
         <ImageView
             android:id="@+id/imageView"
