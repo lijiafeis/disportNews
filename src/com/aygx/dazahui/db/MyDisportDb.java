@@ -4,7 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-
+/**
+ * 娱乐新闻的数据库。
+ * @author Administrator
+ *
+ */
 public class MyDisportDb extends SQLiteOpenHelper {
 	public final static String DB_NAME = "disport.db";
 	public static final String TABLE_NAME = "disport";

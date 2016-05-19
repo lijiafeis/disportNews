@@ -8,11 +8,13 @@ import cn.bmob.v3.listener.SaveListener;
 
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.bean.user.MyUser;
+import com.aygx.dazahui.db.MyCollectDb;
 import com.aygx.dazahui.fragment.news.LoaddingNewsActivity;
 import com.aygx.dazahui.utils.ShareUtils;
 import com.aygx.dazahui.utils.Utils;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -62,6 +64,8 @@ public class LoginActivity extends Activity {
 							System.out.println(nickName);
 							ShareUtils.setUserNick(LoginActivity.this, nickName);
 							setResult(2, getIntent());
+							MyCollectDb collectDb = new MyCollectDb(LoginActivity.this);
+							SQLiteDatabase db = collectDb.getWritableDatabase();
 							finish();
 						}
 					};
@@ -81,7 +85,6 @@ public class LoginActivity extends Activity {
 								System.out.println(arg1);
 							}
 						});
-				ShareUtils.setUserNick(LoginActivity.this, nickName);
 			}
 
 			@Override

@@ -32,6 +32,10 @@ public class LoaddingNewsActivity extends Activity implements
 	private ListView loaddingListView;
 
 	public static final String URL = "url";
+	public static final String TITLE = "title";
+	public static final String DATE = "date";
+	public static final String IMG_URL = "img_url";
+	public static final String BUNDLE = "bundle";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +118,17 @@ public class LoaddingNewsActivity extends Activity implements
 		System.out.println("你点的是第" + arg2 + "个新闻");
 
 		setDataToDb(arg2);
-		String url = newsList.get(arg2).getUrl();
-		intent.putExtra(URL, url);
+		 Result result = newsList.get(arg2);
+		 Bundle bundle = new Bundle();
+		 String url = result.getUrl(); // 新闻连接
+		 String title = result.getTitle(); //新闻标题
+		 String img_url = result.getImg(); //新闻图片标题
+		 String pdate_src = result.getPdate_src(); //时间
+		 bundle.putString(URL, url);
+		 bundle.putString(TITLE, title);
+		 bundle.putString(DATE, pdate_src);
+		 bundle.putString(IMG_URL, img_url);
+		intent.putExtra(BUNDLE, bundle);
 		startActivity(intent);
 		overridePendingTransition(R.anim.go, R.anim.loading_news);
 

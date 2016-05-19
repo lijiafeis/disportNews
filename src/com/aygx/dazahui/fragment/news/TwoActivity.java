@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.adapter.DisportNewsAdapter;
 import com.aygx.dazahui.bean.DisportNewsShow;
+import com.aygx.dazahui.bean.ReDianNews.Result;
 import com.aygx.dazahui.db.MyDisportDb;
 import com.aygx.dazahui.utils.DBUtils;
 import com.aygx.dazahui.utils.Utils;
@@ -213,8 +215,15 @@ public class TwoActivity extends BaseAdapter implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		Intent intent = new Intent(mActivity, NewsContentActivity.class);
 		System.out.println("你点的是第" + arg2 + "个新闻");
-		String url = dbList.get(arg2-1).getUrl();
-		intent.putExtra(LoaddingNewsActivity.URL, url);
+		DisportNewsShow disportNewsShow = dbList.get(arg2-1);
+		 Bundle bundle = new Bundle();
+		 String url = disportNewsShow.getUrl(); // 新闻连接
+		 String title = disportNewsShow.getTitle(); //新闻标题
+		 bundle.putString(LoaddingNewsActivity.URL, url);
+		 bundle.putString(LoaddingNewsActivity.TITLE, title);
+		intent.putExtra(LoaddingNewsActivity.BUNDLE, bundle);
+		 bundle.putString(LoaddingNewsActivity.DATE, "");
+		 bundle.putString(LoaddingNewsActivity.IMG_URL, "");
 		mActivity.startActivity(intent);
 		mActivity.overridePendingTransition(R.anim.go, R.anim.loading_news);
 		

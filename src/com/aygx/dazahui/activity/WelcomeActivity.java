@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Window;
 
 import cn.bmob.v3.Bmob;
 
 import com.aygx.dazahui.R;
+import com.aygx.dazahui.db.MyCollectDb;
 import com.aygx.dazahui.db.MyDisportDb;
 import com.aygx.dazahui.db.MyJokeDb;
 import com.aygx.dazahui.db.MyPicDb;
@@ -39,6 +41,7 @@ public class WelcomeActivity extends Activity {
 		MyJokeDb jokedb = new MyJokeDb(this);
 		//创建pic数据库
 		MyPicDb picDb = new MyPicDb(this);
+		
 		handler.sendEmptyMessageDelayed(0, 200);
 	}
 

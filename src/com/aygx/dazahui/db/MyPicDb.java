@@ -4,7 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-
+/**
+ * 图片的数据库
+ * @author Administrator
+ *
+ */
 public class MyPicDb extends SQLiteOpenHelper {
 	public final static String DB_NAME = "pic.db";
 	public static final String TABLE_NAME = "pic";

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.aygx.dazahui.db.MyCollectDb;
 import com.aygx.dazahui.db.MyDisportDb;
 import com.aygx.dazahui.db.MyJokeDb;
 import com.aygx.dazahui.db.MyPicDb;
@@ -20,13 +21,16 @@ public class DBUtils {
 
 	private static MyDisportDb disport;
 	private static SQLiteDatabase disport_db;
-	
+
 	private static MyJokeDb jokeDb;
 	private static SQLiteDatabase joke_db;
 
 	private static MyPicDb picDb;
 	private static SQLiteDatabase pic_db;
-	
+
+	private static MyCollectDb collectDb;
+	private static SQLiteDatabase collect_db;
+
 	public static void insertAllForShiShi(Context context, ContentValues values) {
 		if (sqlite == null) {
 			sqlite = new MyShiShiNewDb(context);
@@ -136,8 +140,7 @@ public class DBUtils {
 		disport_db.insert(MyDisportDb.TABLE_NAME, null, values);
 		disport_db.close();
 	}
-	
-	
+
 	/*
 	 * 从网上的到的数据joke，保存到数据库中去。
 	 */
@@ -145,13 +148,12 @@ public class DBUtils {
 		if (jokeDb == null) {
 			jokeDb = new MyJokeDb(context);
 		}
-		
+
 		joke_db = jokeDb.getWritableDatabase();
 		joke_db.insert(MyJokeDb.TABLE_NAME, null, values);
 		joke_db.close();
 	}
-	
-	
+
 	/*
 	 * 对从网上解析的数据进行全部的查找MyDisport数据库
 	 */
@@ -160,12 +162,12 @@ public class DBUtils {
 			jokeDb = new MyJokeDb(context);
 		}
 		joke_db = jokeDb.getReadableDatabase();
-		Cursor query = joke_db.query(MyJokeDb.TABLE_NAME, null, null,
-				null, null, null, null);
+		Cursor query = joke_db.query(MyJokeDb.TABLE_NAME, null, null, null,
+				null, null, null);
 		return query;
 
 	}
-	
+
 	/*
 	 * 从网上的到的数据joke，保存到数据库中去。
 	 */
@@ -173,13 +175,12 @@ public class DBUtils {
 		if (picDb == null) {
 			picDb = new MyPicDb(context);
 		}
-		
+
 		pic_db = picDb.getWritableDatabase();
 		pic_db.insert(MyPicDb.TABLE_NAME, null, values);
 		pic_db.close();
 	}
-	
-	
+
 	/*
 	 * 对从网上解析的数据进行全部的查找MyDisport数据库
 	 */
@@ -188,11 +189,56 @@ public class DBUtils {
 			picDb = new MyPicDb(context);
 		}
 		pic_db = picDb.getWritableDatabase();
-		Cursor query = pic_db.query(MyPicDb.TABLE_NAME, null, null,
-				null, null, null, null);
+		Cursor query = pic_db.query(MyPicDb.TABLE_NAME, null, null, null, null,
+				null, null);
 		return query;
 
 	}
 
-	
+	/*
+	 * 查找收藏表中有没有这条数据。在内容详情页收藏的时候进行判断。 返回1表示数据库中这条数据，返回0表示数据库中没有这条数据。
+	 */
+	public static int quiryCollectByUrl(Context context, String url) {
+		if (collectDb == null) {
+			collectDb = new MyCollectDb(context);
+		}
+		collect_db = collectDb.getReadableDatabase();
+		Cursor query = collect_db.query(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, null,
+				MyCollectDb.URL + " = ?", new String[] { url }, null, null,
+				null);
+		if (query.moveToFirst())
+			return 1;
+		return 0;
+
+	}
+
+	// 对收藏的数据库进行添加。
+	public static void insertAllForCollect(Context context, ContentValues values) {
+		if (collectDb == null) {
+			collectDb = new MyCollectDb(context);
+		}
+		collect_db = collectDb.getWritableDatabase();
+		collect_db.insert(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, null, values);
+		collect_db.close();
+	}
+
+	// 对收藏的数据库进行删除。
+	public static void delectCollectForUrl(Context context, String url) {
+		if (collectDb == null) {
+			collectDb = new MyCollectDb(context);
+		}
+		collect_db = collectDb.getWritableDatabase();
+		collect_db.delete(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, MyCollectDb.URL + "=?",
+				new String[] { url });
+	}
+
+	// 对收藏的数据库进行遍历。
+	public static Cursor quiryAllForCollect(Context context) {
+		if (collectDb == null) {
+			collectDb = new MyCollectDb(context);
+		}
+		collect_db = collectDb.getReadableDatabase();
+		Cursor query = collect_db.query(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, null, null, null, null, null, null);
+		return query;
+	}
 }

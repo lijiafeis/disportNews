@@ -4,7 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-
+/**
+ * 笑话的数据库
+ * @author Administrator
+ *
+ */
 public class MyJokeDb extends SQLiteOpenHelper {
 	public final static String DB_NAME = "joke.db";
 	public static final String TABLE_NAME = "joke";
