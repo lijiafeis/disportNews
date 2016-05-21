@@ -41,6 +41,16 @@ public class DBUtils {
 		db.close();
 	}
 
+	// 刪除实时新闻数据
+	public static void deleteAllForShiShi(Context context) {
+		if (sqlite == null) {
+			sqlite = new MyShiShiNewDb(context);
+		}
+
+		db = sqlite.getWritableDatabase();
+		db.execSQL("delete from " + MyShiShiNewDb.TABLE_NAME);
+	}
+
 	public static Cursor quiryAllForShiShi(Context context) {
 		if (sqlite == null) {
 			sqlite = new MyShiShiNewDb(context);
@@ -75,6 +85,15 @@ public class DBUtils {
 				null, null, null);
 		return query;
 
+	}
+
+	// 刪除热点新闻数据
+	public static void deleteAllForReDian(Context context) {
+		if (reDian == null) {
+			reDian = new MyReDianNewsDb(context);
+		}
+		sb = reDian.getReadableDatabase();
+		sb.execSQL("delete from " + MyReDianNewsDb.TABLE_NAME);
 	}
 
 	/*
@@ -141,6 +160,16 @@ public class DBUtils {
 		disport_db.close();
 	}
 
+	// 刪除娱乐新闻
+	public static void deleteAllForDisport(Context context) {
+		if (disport == null) {
+			disport = new MyDisportDb(context);
+		}
+
+		disport_db = disport.getWritableDatabase();
+		disport_db.execSQL("delete from " + MyDisportDb.TABLE_NAME);
+	}
+
 	/*
 	 * 从网上的到的数据joke，保存到数据库中去。
 	 */
@@ -166,6 +195,15 @@ public class DBUtils {
 				null, null, null);
 		return query;
 
+	}
+
+	// 刪除Joke数据
+	public static void deleteAllForJoke(Context context) {
+		if (jokeDb == null) {
+			jokeDb = new MyJokeDb(context);
+		}
+		joke_db = jokeDb.getReadableDatabase();
+		joke_db.execSQL("delete from " + MyJokeDb.TABLE_NAME);
 	}
 
 	/*
@@ -203,7 +241,7 @@ public class DBUtils {
 			collectDb = new MyCollectDb(context);
 		}
 		collect_db = collectDb.getReadableDatabase();
-		Cursor query = collect_db.query(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, null,
+		Cursor query = collect_db.query(MyCollectDb.TABLE_NAME, null,
 				MyCollectDb.URL + " = ?", new String[] { url }, null, null,
 				null);
 		if (query.moveToFirst())
@@ -218,7 +256,7 @@ public class DBUtils {
 			collectDb = new MyCollectDb(context);
 		}
 		collect_db = collectDb.getWritableDatabase();
-		collect_db.insert(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, null, values);
+		collect_db.insert(MyCollectDb.TABLE_NAME, null, values);
 		collect_db.close();
 	}
 
@@ -228,7 +266,7 @@ public class DBUtils {
 			collectDb = new MyCollectDb(context);
 		}
 		collect_db = collectDb.getWritableDatabase();
-		collect_db.delete(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, MyCollectDb.URL + "=?",
+		collect_db.delete(MyCollectDb.TABLE_NAME, MyCollectDb.URL + "=?",
 				new String[] { url });
 	}
 
@@ -238,7 +276,18 @@ public class DBUtils {
 			collectDb = new MyCollectDb(context);
 		}
 		collect_db = collectDb.getReadableDatabase();
-		Cursor query = collect_db.query(ShareUtils.getUserName(context)[0] + MyCollectDb.TABLE_NAME, null, null, null, null, null, null);
+		Cursor query = collect_db.query(MyCollectDb.TABLE_NAME, null, null,
+				null, null, null, null);
 		return query;
 	}
+
+	// 删除collect中所有的数据
+	public static void deleteAllForCollect(Context context, String table) {
+		if (collectDb == null) {
+			collectDb = new MyCollectDb(context);
+		}
+		collect_db = collectDb.getReadableDatabase();
+		collect_db.execSQL("delete from " + MyCollectDb.TABLE_NAME);
+	}
+
 }

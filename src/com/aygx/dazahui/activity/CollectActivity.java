@@ -3,6 +3,9 @@ package com.aygx.dazahui.activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,22 +21,29 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.DeleteListener;
+import cn.bmob.v3.listener.FindCallback;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.adapter.CollectAdapter;
 import com.aygx.dazahui.bean.CollectShow;
+import com.aygx.dazahui.bean.user.CollectBean;
 import com.aygx.dazahui.db.MyCollectDb;
 import com.aygx.dazahui.fragment.news.LoaddingNewsActivity;
 import com.aygx.dazahui.fragment.news.NewsContentActivity;
 import com.aygx.dazahui.utils.DBUtils;
+import com.aygx.dazahui.utils.ShareUtils;
+import com.aygx.dazahui.utils.Utils;
 
 public class CollectActivity extends Activity implements OnClickListener,
 		OnItemClickListener, OnItemLongClickListener {
 
 	private ImageView collect_back;
 	private ListView listView;
+	private String table;// 定义网上的表明。
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,9 @@ public class CollectActivity extends Activity implements OnClickListener,
 		listView = (ListView) findViewById(R.id.collect_listView);
 
 		collect_back.setOnClickListener(this);
+
+		table = ShareUtils.getUserName(CollectActivity.this)[0];
+
 	}
 
 	private List<CollectShow> list;
@@ -145,24 +158,71 @@ public class CollectActivity extends Activity implements OnClickListener,
 				if ("分享".equals(item[arg1])) {
 					showShare(collectShow);
 				} else {
-					DBUtils.delectCollectForUrl(CollectActivity.this,
-							collectShow.getUrl());
-					getCollectDataForDb();
-					setListViewAdapter();
+
+					delectDataForUrl(collectShow.getUrl());
+					// 删除数据完后重新加载数据。
 				}
 			}
 
 		});
 		builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				arg0.dismiss();
 			}
 		});
 		builder.show();
-
 		return true;
+	}
+
+	private CollectBean myCollect = null;
+	// 点击删除的时候从网上删除数据
+	private void delectDataForUrl(final String url1) {
+
+		BmobQuery query = new BmobQuery(table);
+		query.addWhereEqualTo("url", url1);
+		query.findObjects(CollectActivity.this, new FindCallback() {
+
+			@Override
+			public void onFailure(int arg0, String arg1) {
+			}
+
+			@Override
+			public void onSuccess(JSONArray arg0) {
+				for (int i = 0; i < arg0.length(); i++) {
+					try {
+						String id = (String) arg0.getJSONObject(i).get(
+								"objectId");
+						// 删除
+						if (myCollect == null) {
+							myCollect = new CollectBean(table);
+							myCollect.delete(CollectActivity.this, id,
+									new DeleteListener() {
+
+										@Override
+										public void onSuccess() {
+											DBUtils.delectCollectForUrl(
+													CollectActivity.this, url1);
+											getCollectDataForDb();
+											setListViewAdapter();
+										}
+
+										@Override
+										public void onFailure(int arg0,
+												String arg1) {
+											Utils.showToast(
+													CollectActivity.this, arg1);
+										}
+									});
+
+						}
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
 	}
 
 	private void showShare(CollectShow collectShow) {

@@ -19,12 +19,12 @@ public class MyCollectDb extends SQLiteOpenHelper {
 	public static final String IMG_URL = "img_url";
 
 	public MyCollectDb(Context context) {
-		super(context, ShareUtils.getUserName(context)[0] + DB_NAME, null, 1);
+		super(context, DB_NAME, null, 1);
 		this.context = context;
 	}
 	@Override
 	public void onCreate(SQLiteDatabase arg0){
-		arg0.execSQL("CREATE TABLE " + ShareUtils.getUserName(context)[0]+ TABLE_NAME + "(" + _ID
+		arg0.execSQL("CREATE TABLE " +TABLE_NAME + "(" + _ID
 				+ " INTEGER PRIMARY KEY AUTOINCREMENT," + TITLE + " text,"
 				+ URL + " text," + DATE + " text," + IMG_URL + " text)");
 	}

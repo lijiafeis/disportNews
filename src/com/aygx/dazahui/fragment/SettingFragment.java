@@ -28,6 +28,7 @@ import com.aygx.dazahui.activity.LoginActivity;
 import com.aygx.dazahui.activity.RegisterActivity;
 import com.aygx.dazahui.activity.UserKnowActivity;
 import com.aygx.dazahui.bean.user.MyUser;
+import com.aygx.dazahui.utils.DBUtils;
 import com.aygx.dazahui.utils.ShareUtils;
 
 public class SettingFragment extends Fragment implements OnClickListener {
@@ -77,15 +78,15 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		Button idea = (Button) view.findViewById(R.id.idea);
 		Button app = (Button) view.findViewById(R.id.app);
 		Button know = (Button) view.findViewById(R.id.know);
+		Button data_clean = (Button) view.findViewById(R.id.data_clean);
 		// 设计点击事件
 		safe.setOnClickListener(this);
 		system_Setting.setOnClickListener(this);
 		idea.setOnClickListener(this);
 		app.setOnClickListener(this);
 		know.setOnClickListener(this);
-		
-		
-		
+		data_clean.setOnClickListener(this);
+
 		if (isRegister) {
 			linearLayout.setVisibility(View.VISIBLE);
 			landing.setVisibility(View.GONE);
@@ -114,29 +115,35 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			startActivityForResult(intent, 1);
 			break;
 		// 点击下面的几个条目
-		//帐号安全的设置
+		// 帐号安全的设置
 		case R.id.safe:
 
 			Intent intent_safe = new Intent(getActivity(),
 					AccountSafeActivity.class);
 			startActivityForResult(intent_safe, 1);
 			break;
-		//点击是系统设置的页面
+		// 点击是系统设置的页面
 		case R.id.system_setting:
 			break;
-		//点击是意见反馈的页面
+		// 点击是意见反馈的页面
 		case R.id.idea:
-			Intent intent_idea = new Intent(getActivity(),
-					IdeaActivity.class);
+			Intent intent_idea = new Intent(getActivity(), IdeaActivity.class);
 			startActivityForResult(intent_idea, 1);
 
 			break;
-		//精彩推荐
+		// 精彩推荐
 		case R.id.app:
 			break;
-		//用户须知
+		// 用户须知
 		case R.id.know:
-			startActivity(new Intent(getActivity(),UserKnowActivity.class));
+			startActivity(new Intent(getActivity(), UserKnowActivity.class));
+			break;
+		//清理缓存
+		case R.id.data_clean:
+			DBUtils.deleteAllForShiShi(getActivity());
+			DBUtils.deleteAllForReDian(getActivity());
+			DBUtils.deleteAllForDisport(getActivity());
+			DBUtils.deleteAllForJoke(getActivity());
 			break;
 		default:
 			break;

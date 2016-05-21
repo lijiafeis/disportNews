@@ -4,19 +4,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.aygx.dazahui.R;
 import com.aygx.dazahui.adapter.JokeAdapter;
+import com.aygx.dazahui.bean.CollectShow;
 import com.aygx.dazahui.bean.JokeBean;
 import com.aygx.dazahui.bean.JokeBean.Shuju;
 import com.aygx.dazahui.bean.JokeBean.Shuju.Data;
@@ -31,6 +35,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.lidroid.xutils.view.annotation.event.OnItemLongClick;
 
 /**
  * 当第一次打开页面的时候，先看数据库中有没有数据。没有的话访问网络进行数据的读取。
@@ -39,7 +44,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * 
  */
 public class PlayFragment extends Fragment {
-
 	private View view;
 	private PullToRefreshListView listView;
 	private List<JokeShow> showList; // 用来存放所有的joke信息
@@ -57,7 +61,6 @@ public class PlayFragment extends Fragment {
 		view = inflater.inflate(R.layout.fragment_home_play, null);
 		return view;
 	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -198,7 +201,6 @@ public class PlayFragment extends Fragment {
 	private void setPullToRefresh() {
 		listView = (PullToRefreshListView) view
 				.findViewById(R.id.pullToRefreshListView);
-
 		listView.setMode(Mode.PULL_FROM_END);
 		init();// 对上拉刷新进行设置。
 		// 上拉刷新
@@ -230,5 +232,4 @@ public class PlayFragment extends Fragment {
 		endLabels.setRefreshingLabel("正在载入...");// 刷新时
 		endLabels.setReleaseLabel("放开刷新...");// 下来达到一定距离时，显示的提示
 	}
-
 }

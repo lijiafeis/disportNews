@@ -26,11 +26,11 @@ public class WelcomeActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		Bmob.initialize(this, "f62ff6bd8e329e363296c6a69834ca94");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_welcome);
-		
+
 		// 创建实时新闻的数据库
 		MyShiShiNewDb db = new MyShiShiNewDb(this);
 		// 创建热点新闻的数据库
@@ -39,9 +39,15 @@ public class WelcomeActivity extends Activity {
 		MyDisportDb disport = new MyDisportDb(this);
 		// 创建Joke的数据库
 		MyJokeDb jokedb = new MyJokeDb(this);
-		//创建pic数据库
+		// 创建pic数据库
 		MyPicDb picDb = new MyPicDb(this);
-		
+
+		MyCollectDb collectDb = null;
+		if (collectDb == null) {
+			collectDb = new MyCollectDb(this);
+			SQLiteDatabase collect_db = collectDb.getWritableDatabase();
+		}
+
 		handler.sendEmptyMessageDelayed(0, 200);
 	}
 

@@ -3,6 +3,8 @@ package com.aygx.dazahui.fragment.news;
 import java.io.IOException;
 import java.util.jar.JarEntry;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,15 +30,21 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.DeleteListener;
+import cn.bmob.v3.listener.FindCallback;
+import cn.bmob.v3.listener.SaveListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.aygx.dazahui.R;
+import com.aygx.dazahui.bean.user.CollectBean;
 import com.aygx.dazahui.db.MyCollectDb;
 import com.aygx.dazahui.utils.DBUtils;
 import com.aygx.dazahui.utils.ShareUtils;
 import com.aygx.dazahui.utils.Utils;
 import com.lidroid.xutils.DbUtils;
+import com.squareup.okhttp.internal.Util;
 
 public class NewsContentActivity extends Activity implements OnClickListener {
 	private ImageView content_back;
@@ -51,7 +59,7 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 	private String date;
 	private String img_url;
 	boolean isCheck = true;// 记录收藏按钮的状态。
-
+	private String table;//记录网上的表明，从share中得到。
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -206,12 +214,16 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 		if (!ShareUtils.getlogin(this)) {
 			Utils.showAlertDialog(this, "请登录");
 		} else {
+			table = ShareUtils.getUserName(NewsContentActivity.this)[0];
+			
 			if (isCheck) { // 数据库中有这条数据。点击是想取消收藏。
 				content_collect.setImageResource(R.drawable.collect);
 
 				// 从数据库中删除这条数据
 				if (!TextUtils.isEmpty(url)) {
-					DBUtils.delectCollectForUrl(this, url);
+					
+					delectDataForUrl(url);
+					
 				}
 				isCheck = false;
 			} else {
@@ -219,7 +231,28 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 
 				// 添加数据到数据库
 				if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(title)) {
-					insertDataForDb();
+					
+					
+					//保存数据到网上
+					CollectBean myCollectBean = new CollectBean(table);
+					myCollectBean.setTitle(title);
+					myCollectBean.setDate(date);
+					myCollectBean.setUrl(url);
+					myCollectBean.setImg_url(img_url);
+					myCollectBean.save(NewsContentActivity.this,new SaveListener() {
+						
+						@Override
+						public void onSuccess() {
+							//当网上的保存成功的时候，保存到数据库中。
+							insertDataForDb();
+						}
+						
+						@Override
+						public void onFailure(int arg0, String arg1) {
+							
+						}
+					});
+					
 				} else {
 					Utils.showToast(this, "收藏失败");
 				}
@@ -227,6 +260,58 @@ public class NewsContentActivity extends Activity implements OnClickListener {
 			}
 		}
 
+	}
+	
+	private CollectBean myCollect;
+	
+	//点击删除的时候从网上删除数据。
+	private void delectDataForUrl(final String url1) {
+		
+		BmobQuery query = new BmobQuery(table);
+		query.addWhereEqualTo("url", url1);
+		query.findObjects(NewsContentActivity.this,new FindCallback() {
+			
+			@Override
+			public void onFailure(int arg0, String arg1) {
+			}
+			
+			@Override
+			public void onSuccess(JSONArray arg0) {
+				for (int i = 0; i < arg0.length(); i++) {
+					try {
+						String id = (String) arg0.getJSONObject(i).get("objectId");
+						//删除
+						if(myCollect == null){
+							myCollect = new CollectBean(table);
+							myCollect.delete(NewsContentActivity.this, id, new DeleteListener() {
+								
+								@Override
+								public void onSuccess() {
+									DBUtils.delectCollectForUrl(NewsContentActivity.this, url1);
+								}
+								
+								@Override
+								public void onFailure(int arg0, String arg1) {
+									Utils.showToast(NewsContentActivity.this,arg1);
+								}
+							});
+							
+						}
+						
+						
+						
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		
+		
+		
+		
+		
 	}
 
 	private ContentValues cv;

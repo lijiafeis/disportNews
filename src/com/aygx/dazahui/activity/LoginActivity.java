@@ -10,8 +10,10 @@ import com.aygx.dazahui.R;
 import com.aygx.dazahui.bean.user.MyUser;
 import com.aygx.dazahui.db.MyCollectDb;
 import com.aygx.dazahui.fragment.news.LoaddingNewsActivity;
+import com.aygx.dazahui.utils.DBUtils;
 import com.aygx.dazahui.utils.ShareUtils;
 import com.aygx.dazahui.utils.Utils;
+import com.squareup.okhttp.internal.Util;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
@@ -52,44 +54,50 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onSuccess() {
 				Utils.showToast(LoginActivity.this, "登录成功");
-				ShareUtils.setlogin(LoginActivity.this, true);
-				ShareUtils.setUserName(LoginActivity.this, user, pass);
-				MyCollectDb collectDb = new MyCollectDb(LoginActivity.this);
-				SQLiteDatabase db = collectDb.getWritableDatabase();
-				BmobQuery<MyUser> query = new BmobQuery<MyUser>();
-				String[] userName2 = ShareUtils.getUserName(LoginActivity.this);
-				query.addWhereEqualTo("username", userName2[0]);
-				//访问网络是在子线程中执行的，所以这里需要发送一个消息，当成功访问的时候，进行昵称的设置
-				final Handler handler = new Handler() {
-					public void handleMessage(android.os.Message msg) {
-						if (msg.what == 0) {
-							System.out.println(nickName);
-							ShareUtils.setUserNick(LoginActivity.this, nickName);
-							setResult(2, getIntent());
-							finish();
-						}
-					};
-				};
-				query.findObjects(LoginActivity.this,
-						new FindListener<MyUser>() {
-							@Override
-							public void onSuccess(List<MyUser> arg0) {
-								for (MyUser myUser : arg0) {
-									nickName = myUser.getNickName();
-									handler.sendEmptyMessage(0);
-								}
-							}
-
-							@Override
-							public void onError(int arg0, String arg1) {
-								System.out.println(arg1);
-							}
-						});
+				//清空数据
+				DBUtils.deleteAllForCollect(LoginActivity.this, user);
+				//从网上得到的数据保存到本地的数据库中去。
+				Utils.getDataForUrlToDb(LoginActivity.this,user);
+				setDataForLogin(user, pass);
 			}
-
 			@Override
 			public void onFailure(int arg0, String arg1) {
 				Utils.showToast(LoginActivity.this, arg1);
+			}
+		});
+	}
+
+	private void setDataForLogin(final String user, final String pass) {
+		// 设置登录状态是TRUE
+		ShareUtils.setlogin(LoginActivity.this, true);
+		// 设置用户名和密码
+		ShareUtils.setUserName(LoginActivity.this, user, pass);
+		BmobQuery<MyUser> query = new BmobQuery<MyUser>();
+		String[] userName2 = ShareUtils.getUserName(LoginActivity.this);
+		query.addWhereEqualTo("username", userName2[0]);
+		// 访问网络是在子线程中执行的，所以这里需要发送一个消息，当成功访问的时候，进行昵称的设置
+		final Handler handler = new Handler() {
+			public void handleMessage(android.os.Message msg) {
+				if (msg.what == 0) {
+					System.out.println(nickName);
+					ShareUtils.setUserNick(LoginActivity.this, nickName);
+					setResult(2, getIntent());
+					finish();
+				}
+			};
+		};
+		query.findObjects(LoginActivity.this, new FindListener<MyUser>() {
+			@Override
+			public void onSuccess(List<MyUser> arg0) {
+				for (MyUser myUser : arg0) {
+					nickName = myUser.getNickName();
+					handler.sendEmptyMessage(0);
+				}
+			}
+
+			@Override
+			public void onError(int arg0, String arg1) {
+				System.out.println(arg1);
 			}
 		});
 	}
